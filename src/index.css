@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+  .font-sans {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .font-mono {
+    font-family: 'Inter', monospace;
+  }
+  .tracking-luxury {
+    letter-spacing: 0.18em;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #071A35;
+}
+::-webkit-scrollbar-thumb {
+  background: #D6B24C;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e6c565;
+}
+
+/* Soft gold glow and border styles */
+.border-gold-soft {
+  border-color: rgba(214, 178, 76, 0.18);
+}
+
+.border-gold-mid {
+  border-color: rgba(214, 178, 76, 0.4);
+}
+
+.bg-midnight {
+  background-color: #071A35;
+}
+
+.text-gold {
+  color: #D6B24C;
+}
+
+.bg-gold {
+  background-color: #D6B24C;
+}
+
+.bg-ivory {
+  background-color: #F7F3EC;
+}
+
+.bg-offwhite {
+  background-color: #FCFBF8;
+}
+
+/* Celestial background subtle noise/grain or pattern */
+.celestial-subtle {
+  background-image: radial-gradient(rgba(214, 178, 76, 0.12) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+

@@ -1,0 +1,6 @@
+{
+  "name": "Orion Cafe & Social Hub",
+  "description": "Luxury European café, gourmet dining, handcrafted coffee, and social lounge in Banjara Hills, Hyderabad.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
