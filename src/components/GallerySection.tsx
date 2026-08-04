@@ -1,17 +1,39 @@
 import React, { useState } from 'react';
 import { GALLERY_ITEMS } from '../data/galleryData';
 import { GalleryItem } from '../types';
-import { Maximize2, X } from 'lucide-react';
+import { Maximize2, X, Share2, Check } from 'lucide-react';
 
 export const GallerySection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const categories = ['All', 'Interior', 'Culinary', 'Coffee', 'Atmosphere'];
 
   const filtered = activeCategory === 'All'
     ? GALLERY_ITEMS
     : GALLERY_ITEMS.filter((item) => item.category === activeCategory);
+
+  const handleCopyLink = (item?: GalleryItem, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    
+    const baseUrl = window.location.origin + window.location.pathname;
+    const shareUrl = item
+      ? `${baseUrl}#gallery?image=${item.id}`
+      : `${baseUrl}#gallery`;
+
+    const targetId = item ? item.id : 'gallery';
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        setCopiedId(targetId);
+        setTimeout(() => setCopiedId(null), 2000);
+      });
+    } else {
+      setCopiedId(targetId);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
+  };
 
   return (
     <section id="gallery" className="py-24 sm:py-32 bg-[#FCFBF8] text-[#1A1A1A]">
@@ -26,9 +48,29 @@ export const GallerySection: React.FC = () => {
                 06 — VISUAL ESSAY
               </span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-5xl font-normal text-[#071A35]">
-              Editorial Gallery
-            </h2>
+            <div className="flex items-center gap-4">
+              <h2 className="font-serif text-3xl sm:text-5xl font-normal text-[#071A35]">
+                Editorial Gallery
+              </h2>
+              {/* Discreet Share Gallery Button */}
+              <button
+                onClick={(e) => handleCopyLink(undefined, e)}
+                className="px-3 py-1.5 text-[11px] font-mono tracking-wider uppercase text-[#071A35]/70 hover:text-[#071A35] bg-[#F7F3EC] hover:bg-[#E9DDD2] border border-[#D6B24C]/30 transition-colors flex items-center gap-1.5 rounded-none"
+                title="Share Gallery Link"
+              >
+                {copiedId === 'gallery' ? (
+                  <>
+                    <Check size={12} className="text-emerald-700" />
+                    <span className="text-emerald-700 font-semibold">Gallery Link Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 size={12} className="text-[#D6B24C]" />
+                    <span>Share Gallery</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Categories */}
@@ -66,9 +108,24 @@ export const GallerySection: React.FC = () => {
 
               {/* Hover Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-[#071A35] via-[#071A35]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
-                <span className="text-[10px] font-mono tracking-luxury text-[#D6B24C] uppercase mb-1">
-                  {item.category}
-                </span>
+                <div className="flex justify-between items-start mb-1">
+                  <span className="text-[10px] font-mono tracking-luxury text-[#D6B24C] uppercase">
+                    {item.category}
+                  </span>
+                  {/* Discreet Share Button on Card */}
+                  <button
+                    onClick={(e) => handleCopyLink(item, e)}
+                    className="p-1.5 text-[#F7F3EC]/80 hover:text-[#D6B24C] bg-[#071A35]/80 hover:bg-[#071A35] border border-[#D6B24C]/30 transition-colors"
+                    title="Share this image"
+                  >
+                    {copiedId === item.id ? (
+                      <Check size={12} className="text-emerald-400" />
+                    ) : (
+                      <Share2 size={12} />
+                    )}
+                  </button>
+                </div>
+                
                 <h3 className="font-serif text-xl font-normal text-[#F7F3EC] mb-2">
                   {item.title}
                 </h3>
@@ -76,9 +133,14 @@ export const GallerySection: React.FC = () => {
                   {item.caption}
                 </p>
 
-                <div className="mt-4 flex items-center gap-1 text-[11px] font-mono text-[#D6B24C] uppercase">
-                  <Maximize2 size={12} />
-                  <span>Expand View</span>
+                <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-[#D6B24C] uppercase">
+                  <div className="flex items-center gap-1">
+                    <Maximize2 size={12} />
+                    <span>Expand View</span>
+                  </div>
+                  {copiedId === item.id && (
+                    <span className="text-[10px] text-emerald-400 font-sans tracking-tight">Link Copied!</span>
+                  )}
                 </div>
               </div>
 
@@ -119,9 +181,29 @@ export const GallerySection: React.FC = () => {
                 </p>
               </div>
 
-              <span className="text-xs font-mono text-[#071A35]/60 shrink-0">
-                Banjara Hills Collection
-              </span>
+              <div className="flex items-center gap-3 shrink-0">
+                {/* Discreet Share Button in Modal */}
+                <button
+                  onClick={(e) => handleCopyLink(selectedImage, e)}
+                  className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-[#071A35] bg-[#F7F3EC] hover:bg-[#E9DDD2] border border-[#D6B24C]/40 transition-colors flex items-center gap-1.5"
+                >
+                  {copiedId === selectedImage.id ? (
+                    <>
+                      <Check size={12} className="text-emerald-700" />
+                      <span className="text-emerald-700 font-semibold">Link Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 size={12} className="text-[#D6B24C]" />
+                      <span>Share Image</span>
+                    </>
+                  )}
+                </button>
+
+                <span className="text-xs font-mono text-[#071A35]/60 hidden sm:inline">
+                  Banjara Hills Collection
+                </span>
+              </div>
             </div>
 
           </div>
